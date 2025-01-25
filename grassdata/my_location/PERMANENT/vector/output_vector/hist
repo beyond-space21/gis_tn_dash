@@ -1,0 +1,3 @@
+COMMAND: r.to.vect --overwrite input="thinned_raster" output="output_vector" type="line" column="value"
+GISDBASE: /home/anand/python_gis/grassdata
+LOCATION: my_location MAPSET: PERMANENT USER: anand DATE: Sat Jan 25 09:47:05 2025
