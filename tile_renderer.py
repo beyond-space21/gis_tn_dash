@@ -6,7 +6,7 @@ from io import BytesIO
 import cv2
 import numpy as np
 import crop_image
-
+import os
 import sys
 sys.path.append('/usr/lib/python3/dist-packages')
 from osgeo import gdal, osr
@@ -90,9 +90,14 @@ def render(ne_latitude,ne_longitude,sw_latitude,sw_longitude,image_name):
     pixel_width = (ne_longitude - sw_longitude) / width
     pixel_height = (ne_latitude - sw_latitude) / height
 
+    sv_dir = "raster/"+image_name
+
+    if not os.path.exists(sv_dir):
+       os.makedirs(sv_dir)
+
     # Create GDAL raster
     driver = gdal.GetDriverByName("BMP")
-    dataset = driver.Create(image_name+".bmp", width, height, 1, gdal.GDT_Byte)
+    dataset = driver.Create(sv_dir+'/'+image_name+".bmp", width, height, 1, gdal.GDT_Byte)
     dataset.GetRasterBand(1).WriteArray(rendered_image)
     dataset.SetGeoTransform([sw_longitude, pixel_width, 0, ne_latitude, 0, -pixel_height])
 
