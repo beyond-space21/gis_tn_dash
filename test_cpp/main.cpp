@@ -5,13 +5,15 @@
 
 std::string path = "tiles/";
 
-cv::Mat renderMapTiles(int minX, int maxX, int minY, int maxY) {
+bool renderMapTiles(int minX, int maxX, int minY, int maxY, std::string saveAs) {
     // Determine the size of the resulting image
     int width = (maxX - minX + 1) * 256;
     int height = (maxY - minY + 1) * 256;
 
     // Create a blank canvas for the combined image
     cv::Mat combinedImage(height, width, CV_8UC1, cv::Scalar(0));
+
+    bool done = 1;
 
     // Iterate through the tiles in the bounding box
     for (int x = minX; x <= maxX; ++x) {
@@ -33,13 +35,18 @@ cv::Mat renderMapTiles(int minX, int maxX, int minY, int maxY) {
                 // Paste the tile onto the canvas
                 tileImage.copyTo(combinedImage(cv::Rect(offsetX, offsetY, 256, 256)));
             } catch (const std::exception& e) {
+                done = 0;
                 std::cerr << "Failed to fetch: " << path + std::to_string(x) + "/" + std::to_string(y) + ".png"<< std::endl;
             }
         }
     }
 
-    return combinedImage;
+    if(done)
+    cv::imwrite(saveAs,combinedImage);
+
+    return !done;
 }
+
 
 int main() {
     int minX=187144;
@@ -47,9 +54,7 @@ int main() {
     int minY=122959;
     int maxY=122960;
 
-    cv::Mat result = renderMapTiles(minX, maxX, minY, maxY);
-
-    cv::imwrite("combined_image.png", result);
+    renderMapTiles(minX, maxX, minY, maxY,"hello.bmp");
 
     return 0;
 }
