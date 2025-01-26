@@ -5,7 +5,7 @@ import os
 from grass.script import setup as gsetup
 from grass.script import run_command, read_command
 
-import init
+import grass_space as init
 import tile_renderer
 
 gisdb = "grassdata"    
