@@ -5,13 +5,13 @@ import os
 from grass.script import setup as gsetup
 from grass.script import run_command, read_command
 
-gisdb = "grassdata"
-location = "my_location"
+import init
+import tile_renderer
 
-def run_process(north,east,south,west,mapset,source_raster,output_raster,output_vector):
-    # mapset = "PERMANENT"
-    # image_path = "combined_image_b_.bmp"
-    # output_vector = "output_vector"
+gisdb = "grassdata"    
+mapset = "PERMANENT"
+
+def run_process(north,east,south,west,location,source_raster,output_raster,output_vector):
     smoothed_vector = output_raster+"_smth"
 
     gsetup.init(gisdb, location, mapset)
@@ -36,4 +36,10 @@ def run_process(north,east,south,west,mapset,source_raster,output_raster,output_
 
 north, east = 11.07124, 77.011059 
 south, west = 11.070540, 77.004476
-run_process(north,east,south,west,"PERMANENT","combined_image_b_.bmp","out_test","test_out_vec")
+
+task_id = "test_P"
+
+tile_renderer.render(north,east,south,west,task_id)
+input("completed render")
+init.create_env(task_id)
+run_process(north,east,south,west,task_id,task_id+".bmp","raster_"+task_id,"vector_"+task_id)
