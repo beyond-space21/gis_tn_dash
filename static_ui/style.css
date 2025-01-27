@@ -108,7 +108,7 @@
 }
 
 .RUNNING{
-  background-color: rgb(247, 135, 135);
+  background-color: rgb(247, 230, 135);
 }
 
 .COMPLETED{
@@ -116,5 +116,5 @@
 }
 
 .ERROR{
-  background-color: rgb(247, 230, 135);
+  background-color: rgb(247, 135, 135);
 }

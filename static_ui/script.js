@@ -70,9 +70,7 @@ function put_log(str) {
     document.getElementById("server_response").innerText += '\n> ' + str
 }
 
-
-
-setInterval(async () => {
+async function update_met(){
     const response = await fetch(endpoint + "/api/bsd", {
         headers: {
             "Content-Type": "application/json",
@@ -95,8 +93,10 @@ setInterval(async () => {
         }
         document.getElementById('tasks_list').appendChild(elm)
     });
+}
 
-
+setInterval(async () => {
+    await update_met()
 }, 2000);
 
 function generateUUID() {
@@ -110,41 +110,54 @@ function generateUUID() {
     return uuid.replace(/-/g, ''); // Remove hyphens
 }
 
+btn_flg = true
+
 document.getElementById('run_btn').onclick = async () => {
-    if (rectangle) {
-        const bounds = rectangle.getBounds();
-        const ne = bounds.getNorthEast();
-        const sw = bounds.getSouthWest();
+    if (btn_flg) {
+        btn_flg = false
+        if (rectangle) {
+            const bounds = rectangle.getBounds();
+            const ne = bounds.getNorthEast();
+            const sw = bounds.getSouthWest();
 
-        box_data = {
-            ne_lat: ne.lat(),
-            ne_lon: ne.lng(),
-            sw_lat: sw.lat(),
-            sw_lon: sw.lng(),
-            task_id: generateUUID()
-        }
-
-        box_data = {
-            ne_lat: 11.07124,
-            ne_lon: 77.011059,
-            sw_lat: 11.070540,
-            sw_lon: 77.00447,
-            task_id: generateUUID()
-        }
-
-        fetch(endpoint + "/process_data", {
-            method: "POST",
-            body: JSON.stringify(box_data),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                "Auth-Token": await getToken()
+            box_data = {
+                ne_lat: ne.lat(),
+                ne_lon: ne.lng(),
+                sw_lat: sw.lat(),
+                sw_lon: sw.lng(),
+                task_id: generateUUID()
             }
-        })
-            .then((response) => response.json())
-            .then((json) => console.log(json));
 
+            box_data = {
+                ne_lat: 11.07124,
+                ne_lon: 77.011059,
+                sw_lat: 11.070540,
+                sw_lon: 77.00447,
+                task_id: generateUUID()
+            }
+
+            await fetch(endpoint + "/process_data", {
+                method: "POST",
+                body: JSON.stringify(box_data),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Auth-Token": await getToken()
+                }
+            })
+                .then((response) => response.json())
+                .then((json) => console.log(json));
+                
+            await update_met()
+
+            setTimeout(() => {
+                btn_flg = true
+            }, 2000);
+
+        } else {
+            alert("No rectangle to run.");
+        }
     } else {
-        alert("No rectangle to run.");
+        alert("Wait some SECONDS to process previous request")
     }
 }
 

@@ -112,21 +112,21 @@ def run_process(north,east,south,west,location,source_raster,output_raster,outpu
        run_command("v.out.ogr", input=smoothed_vector, output=sp_dir+'/'+output_vector+".shp", format="ESRI_Shapefile", overwrite=True)
        write_log(json.dumps({"log": "Saving the vector"}),logs)
 
-       # zip_directory(sp_dir+'/')
-       # write_log(json.dumps({"log": "Zipping the files"}),logs)
+       zip_directory(sp_dir+'/')
+       write_log(json.dumps({"log": "Zipping the files"}),logs)
 
     except Exception as e:
          write_log(json.dumps({"log":"error","error": e,}),logs)
 
 
 
-north, east = 11.07124, 77.011059 
-south, west = 11.070540, 77.004476
+# north, east = 11.07124, 77.011059 
+# south, west = 11.070540, 77.004476
 
 
-task_id = "ghy"
+# task_id = "ghy"
 
 
-tile_renderer.render(north,east,south,west,task_id)
-init.create_env(task_id)
-run_process(north,east,south,west,task_id,task_id,"raster_"+task_id,task_id,task_id)
+# tile_renderer.render(north,east,south,west,task_id)
+# init.create_env(task_id)
+# run_process(north,east,south,west,task_id,task_id,"raster_"+task_id,task_id,task_id)

@@ -70,11 +70,23 @@
         font-size: larger;
         font-weight: 500;
     }
+
+    #loading{
+        color: aliceblue;
+        font-weight: 700;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: medium;
+    }
 </style>
 
 <body>
+
+    <div id="cont"></div>
+    <div id="loading">LOADING...</div>
+
     <script>
-        
+        ldng = document.getElementById("loading")
+        cont = document.getElementById("cont")
         
         endpoint = "http://localhost:5000/"
         checkAuth(init_cnt)
@@ -97,7 +109,7 @@
             elm.innerHTML = `
             <div class="block_head">${obj.log}</div>
             `
-            document.body.appendChild(elm)
+            cont.appendChild(elm)
             }
         });
 
@@ -127,7 +139,8 @@
             `
         })
 
-        document.body.appendChild(elm)
+        cont.appendChild(elm)
+        ldng.style.display = 'none'
 
     }
 

@@ -1,4 +1,4 @@
-tile_URL = "{x}/{y}.png"
+tile_URL = "test_cpp/tiles/{x}/{y}.png"
 
 
 
