@@ -6,7 +6,7 @@ import psutil
 import time
 import main
 import os
-
+from auth import verify
 
 app = Flask(__name__, static_folder='static_ui')
 CORS(app)
@@ -75,43 +75,54 @@ def serve_static_files(path='index.html'):
 
 @app.route('/api/<path:path>')
 def api(path):
-    global all_tasks
-    if path == "bsd":
-        memory_info = psutil.virtual_memory()
-        return {"ram": memory_info.used, "tasks": len(all_tasks), "tasks_list": dict(all_tasks)}
+    if verify(request.headers.get('Auth-Token')):
+        global all_tasks
+        if path == "bsd":
+            memory_info = psutil.virtual_memory()
+            return {"ram": memory_info.used, "tasks": len(all_tasks), "tasks_list": dict(all_tasks)}
+    return "not_Authorised"
 
 @app.route('/api/logs/<path:path>')
 def logs(path):
-    return send_from_directory("logs", path + ".txt")
+    if verify(request.headers.get('Auth-Token')):
+        return send_from_directory("logs", path + ".txt")
+    return "not_Authorised"
+
     
 @app.route('/process_data', methods=['POST'])
 def process_data():
-    data = request.get_json()
-    return {"status": init_new_task(data)}
+    if verify(request.headers.get('Auth-Token')):
+        data = request.get_json()
+        return {"status": init_new_task(data)}
+    return "not_Authorised"
 
 @app.route('/api/shp/<path:path>', methods=['GET'])
 def list_files(path):
-    # Normalize the path to avoid directory traversal issues
-    folder_path = os.path.abspath("shp/"+path)
+    if verify(request.headers.get('Auth-Token')):
+        # Normalize the path to avoid directory traversal issues
+        folder_path = os.path.abspath("shp/"+path)
 
-    print(folder_path)
-    # Check if the folder exists
-    if not os.path.isdir(folder_path):
-        return jsonify({"error": "The specified folder does not exist."}), 400
+        print(folder_path)
+        # Check if the folder exists
+        if not os.path.isdir(folder_path):
+            return jsonify({"error": "The specified folder does not exist."}), 400
 
-    try:\
-        # List the files in the folder
-        files = os.listdir(folder_path)
-        # Filter only files (ignore directories)
-        files = [f for f in files if os.path.isfile(os.path.join(folder_path, f))]
-        return jsonify({"files": files}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        try:\
+            # List the files in the folder
+            files = os.listdir(folder_path)
+            # Filter only files (ignore directories)
+            files = [f for f in files if os.path.isfile(os.path.join(folder_path, f))]
+            return jsonify({"files": files}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    return "not_Authorised"
 
 @app.route('/api/shp/get_file/<path:path>', methods=['GET'])
 def get_files(path):
-    print(path.split('.')[0]+path)
-    return send_from_directory("shp", path.split('.')[0]+"/"+path)
+    if True:
+        print(path.split('.')[0]+path)
+        return send_from_directory("shp", path.split('.')[0]+"/"+path)
+    return "not_Authorised"
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
