@@ -1,4 +1,4 @@
-tile_URL = "root/tiles/{x}/{y}.png"
+tile_URL = "/root/tiles/{x}/{y}.png"
 
 
 from PIL import Image

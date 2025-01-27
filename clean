@@ -2,6 +2,6 @@ rm -rf shp
 rm -rf logs
 rm -rf raster
 rm -rf grassdb
-rm all_jasks.json
+rm all_tasks.json
 
 echo {} > all_jasks.json
