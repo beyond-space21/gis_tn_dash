@@ -91,7 +91,7 @@ setInterval(async () => {
         elm.className = "tsks_lst " + data.tasks_list[e].status
         elm.innerText = e
         elm.onclick = () => {
-            window.open(endpoint + "/api/logs/" + e)
+            window.open(endpoint + "/get_file.html?" + e)
         }
         document.getElementById('tasks_list').appendChild(elm)
     });

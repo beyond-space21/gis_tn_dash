@@ -1,10 +1,12 @@
 import multiprocessing
-from flask import Flask, send_from_directory, request
+from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
 import json
 import psutil
 import time
 import main
+import os
+
 
 app = Flask(__name__, static_folder='static_ui')
 CORS(app)
@@ -80,13 +82,36 @@ def api(path):
 
 @app.route('/api/logs/<path:path>')
 def logs(path):
-    return send_from_directory("logs", path + ".html")
+    return send_from_directory("logs", path + ".txt")
     
 @app.route('/process_data', methods=['POST'])
 def process_data():
     data = request.get_json()
     return {"status": init_new_task(data)}
-    
+
+@app.route('/api/shp/<path:path>', methods=['GET'])
+def list_files(path):
+    # Normalize the path to avoid directory traversal issues
+    folder_path = os.path.abspath("shp/"+path)
+
+    print(folder_path)
+    # Check if the folder exists
+    if not os.path.isdir(folder_path):
+        return jsonify({"error": "The specified folder does not exist."}), 400
+
+    try:\
+        # List the files in the folder
+        files = os.listdir(folder_path)
+        # Filter only files (ignore directories)
+        files = [f for f in files if os.path.isfile(os.path.join(folder_path, f))]
+        return jsonify({"files": files}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/shp/get_file/<path:path>', methods=['GET'])
+def get_files(path):
+    print(path.split('.')[0]+path)
+    return send_from_directory("shp", path.split('.')[0]+"/"+path)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
