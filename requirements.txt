@@ -1,0 +1,6 @@
+opencv-python
+pyproj
+mercantile
+firebase-admin
+grass-session
+flask_CORS
