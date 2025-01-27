@@ -5,6 +5,7 @@ up_btn.onclick = () => {
     ip_tg.click()
 }
 
+
 endpoint = "http://84.247.139.36:5000/"
 
 ip_tg.addEventListener('change', function (event) {
@@ -112,7 +113,12 @@ function generateUUID() {
 
 btn_flg = true
 
+MAX_RAM = 50
+
 document.getElementById('run_btn').onclick = async () => {
+
+
+    if(RAM_VALIDATOR < MAX_RAM)
     if (btn_flg) {
         btn_flg = false
         if (rectangle) {
@@ -158,6 +164,9 @@ document.getElementById('run_btn').onclick = async () => {
         }
     } else {
         alert("Wait some SECONDS to process previous request")
+    }
+    else{
+        alert("select area with RAM < "+MAX_RAM+"GB")
     }
 }
 

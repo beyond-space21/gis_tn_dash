@@ -46,12 +46,9 @@ function update_metrics(sw_lat,ne_lat,sw_lng,ne_lng){
     row = p1.tile.row - p2.tile.row + 1
     document.getElementById('tiles').innerText = col*row
     document.getElementById('pixels').innerText = col*row*256*256
-    document.getElementById('ram').innerText = Math.round((col*row*256*256) / (1024 * 1024 * 1024))*4 + " GB";
-    
-
-    
+    RAM_VALIDATOR = Math.round((col*row*256*256) / (1024 * 1024 * 1024))*4
+    document.getElementById('ram').innerText = RAM_VALIDATOR + " GB"; 
 
     
 }
-
 
