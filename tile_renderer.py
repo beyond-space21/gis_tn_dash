@@ -47,12 +47,16 @@ def render_map_tiles(base_url, ne_lat, ne_lon, sw_lat, sw_lon, zoom_level):
         for y in range(min_y, max_y + 1):
             tile_url = base_url.format(z=zoom_level, x=x, y=y)
             try:
-                print("gt")
+                print(tile_url)
                 response = requests.get(tile_url)
                 if response.status_code == 200:
                     # Read the image as a NumPy array
-                    tile_image = np.asarray(bytearray(response.content), dtype=np.uint8)
-                    tile_image = cv2.imdecode(tile_image, cv2.IMREAD_GRAYSCALE)
+                    tile_image_ = np.asarray(bytearray(response.content), dtype=np.uint8)
+                    tile_image = cv2.imdecode(tile_image_, cv2.IMREAD_GRAYSCALE)
+                    tile_image_ = cv2.imdecode(tile_image_, cv2.IMREAD_UNCHANGED)
+                    if not os.path.exists(str(x)):
+                        os.makedirs(str(x))
+                    cv2.imwrite(str(x)+'/'+str(y)+'.png',tile_image_)
 
                     # Convert the image to binary (1 byte per pixel)
                     _, tile_image = cv2.threshold(tile_image, 215, 255, cv2.THRESH_BINARY_INV)

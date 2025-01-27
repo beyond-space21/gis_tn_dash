@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polygon to KML Generator</title>
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+
+        #controls {
+            margin: 10px 0;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg_Z0fpXfeVx2iwtYHRt614EDC8gqOOfc"></script>
+</head>
+
+<body>
+    <h1>Polygon to KML Generator</h1>
+    <div id="controls">
+        <button onclick="clearPolygon()">Clear Polygon</button>
+        <button onclick="generateKML()">Generate KML</button>
+    </div>
+    <div id="map"></div>
+    <a id="download-link" style="display: none;">Download KML</a>
+
+    <script>
+        let map;
+        let polygon;
+        let path;
+
+        window.onload = initMap;
+        const polygonCoords = [
+            { lat: 10.546905988265289, lng: 76.67497587890622 },
+            { lat: 10.633299573167053, lng: 77.19133330078122 },
+            { lat: 10.206497221617747, lng: 76.98259306640622 }
+        ];
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 10.7905, lng: 78.7047 }, // Center of Tamil Nadu
+                zoom: 8,
+            });
+
+            path = new google.maps.MVCArray();
+
+            polygon = new google.maps.Polygon({
+                paths: polygonCoords,
+                strokeColor: '#0000FF',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#0000FF',
+                fillOpacity: 0.35,
+                editable: true,
+            });
+
+            polygon.setMap(map);
+
+            attachPathListeners(polygon.getPath());
+        }
+
+
+
+        function attachPathListeners(path) {
+            // Called when a vertex is modified
+            path.addListener('set_at', function (index) {
+                const updatedCoords = path.getArray().map(latlng => ({
+                    lat: latlng.lat(),
+                    lng: latlng.lng(),
+                }));
+                console.log(`Vertex ${index} modified. Updated path:`, updatedCoords);
+                handlePolygonEdit(updatedCoords);
+            });
+
+            // Called when a new vertex is added
+            path.addListener('insert_at', function (index) {
+                const updatedCoords = path.getArray().map(latlng => ({
+                    lat: latlng.lat(),
+                    lng: latlng.lng(),
+                }));
+                console.log(`Vertex ${index} added. Updated path:`, updatedCoords);
+                handlePolygonEdit(updatedCoords);
+            });
+
+            // Called when a vertex is removed
+            path.addListener('remove_at', function (index) {
+                const updatedCoords = path.getArray().map(latlng => ({
+                    lat: latlng.lat(),
+                    lng: latlng.lng(),
+                }));
+                console.log(`Vertex ${index} removed. Updated path:`, updatedCoords);
+                handlePolygonEdit(updatedCoords);
+            });
+        }
+
+        function handlePolygonEdit(updatedCoords) {
+            // Perform custom actions with the updated coordinates
+            console.log("Polygon updated. New coordinates:", updatedCoords);
+            // Example: Send updatedCoords to a server or update a UI element
+        }
+
+
+        function generateKML() {
+            if (path.getLength() < 3) {
+                alert('A polygon must have at least 3 points.');
+                return;
+            }
+
+            const kmlHeader = `<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Placemark>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>`;
+
+            const kmlFooter = `
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+  </Document>
+</kml>`;
+
+            let coordinates = '';
+            path.forEach((point) => {
+                coordinates += `${point.lng()},${point.lat()},0 `;
+            });
+            coordinates += `${path.getAt(0).lng()},${path.getAt(0).lat()},0`; // Close the polygon
+
+            const kmlContent = kmlHeader + coordinates + kmlFooter;
+
+            const blob = new Blob([kmlContent], { type: 'application/vnd.google-earth.kml+xml' });
+            const url = URL.createObjectURL(blob);
+
+            const downloadLink = document.getElementById('download-link');
+            downloadLink.href = url;
+            downloadLink.download = 'polygon.kml';
+            downloadLink.style.display = 'block';
+            downloadLink.textContent = 'Download KML';
+        }
+
+    </script>
+</body>
+
+</html>

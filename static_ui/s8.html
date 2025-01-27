@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Printer Monitoring Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f4f4f4;
+            padding: 1rem;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .dashboard-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav ul li {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Jotterly</div>
+    <nav>
+        <ul>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#monitoring">Printer Monitoring</a></li>
+            <li><a href="#file-management">File Management</a></li>
+            <li><a href="#slicing">Slicing Tool</a></li>
+            <li><a href="#settings">Settings</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    <aside class="sidebar">
+        <ul>
+            <li><a href="#overview">Printer Overview</a></li>
+            <li><a href="#active">Active Prints</a></li>
+            <li><a href="#completed">Completed Prints</a></li>
+            <li><a href="#storage">Cloud Storage</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <section id="dashboard">
+            <div class="dashboard-card">
+                <h2>Printer Overview</h2>
+                <p>All connected printers at a glance.</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h2>Print Jobs</h2>
+                <p>Track active, completed, and pending print jobs.</p>
+            </div>
+
+            <div class="dashboard-card">
+                <h2>Recent Activity</h2>
+                <p>Recent uploads, completed slices, and errors.</p>
+            </div>
+        </section>
+
+        <section id="monitoring">
+            <div class="dashboard-card">
+                <h2>Printer Monitoring</h2>
+                <p>Real-time visualization of printer metrics.</p>
+            </div>
+        </section>
+    </main>
+</div>
+
+<footer>
+    <p>&copy; 2025 Jotterly | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+</footer>
+
+</body>
+</html>

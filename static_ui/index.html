@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>KML Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg_Z0fpXfeVx2iwtYHRt614EDC8gqOOfc&libraries=drawing"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.6.2/proj4.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAeC41pvleIQBEmHNHO-x1_MN6FXRgnNPQ",
+      authDomain: "mypropertyqr-gis-dash.firebaseapp.com",
+      projectId: "mypropertyqr-gis-dash",
+      storageBucket: "mypropertyqr-gis-dash.firebasestorage.app",
+      messagingSenderId: "998236341453",
+      appId: "1:998236341453:web:c91178d7cc5dd3be4cd584",
+      measurementId: "G-D431Y96BZJ"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Function to check authentication and redirect
+    function checkAuth() {
+      firebase.auth().onAuthStateChanged(user => {
+        if (!user) {
+          window.location.href = "login.html";
+        } else {
+          console.log(user);
+
+        }
+      });
+    }
+
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "login.html";
+      }).catch(error => {
+        console.error("Error logging out:", error);
+      });
+    }
+
+    function getToken() {
+      return firebase.auth().currentUser.getIdToken(true)
+        .then(token => token)
+        .catch(error => {
+          alert("Error fetching token:", error);
+          return null;
+        });
+    }
+
+  </script>
+  <script src="script_a.js"></script>
+  <script>
+    let map;
+    let drawingManager;
+    let rectangle = null;
+    let polygon = null;
+
+    function initMap() {
+      checkAuth()
+
+      // Initialize the map
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 12.9716, lng: 77.5946 }, // Default center (Bangalore, India)
+        zoom: 8,
+      });
+
+      // Initialize the drawing manager
+      drawingManager = new google.maps.drawing.DrawingManager({
+        drawingMode: google.maps.drawing.OverlayType.RECTANGLE,
+        drawingControl: true,
+        drawingControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_CENTER,
+          drawingModes: [google.maps.drawing.OverlayType.RECTANGLE],
+        },
+        rectangleOptions: {
+          strokeColor: '#0000FF',
+          strokeOpacity: 1,
+          strokeWeight: 3,
+          fillColor: '#FFFF00',
+          fillOpacity: 0.35,
+          editable: true,
+          draggable: true,
+        },
+      });
+
+      drawingManager.setMap(map);
+
+      // Add an event listener for the rectangle completion
+      google.maps.event.addListener(drawingManager, "overlaycomplete", (event) => {
+        if (event.type === google.maps.drawing.OverlayType.RECTANGLE) {
+          if (!rectangle) {
+            rectangle = event.overlay;
+
+            // Add a mousemove listener for real-time interaction
+            google.maps.event.addListener(rectangle, "bounds_changed", () => {
+              handleMouseMove(rectangle);
+            });
+
+            handleMouseMove(rectangle);
+
+            drawingManager.setDrawingMode(null); // Disable further drawing
+            drawingManager.setOptions({ drawingControl: false }); // Hide drawing controls
+          } else {
+            event.overlay.setMap(null); // Remove additional rectangles
+            alert("Only one rectangle is allowed. Edit the existing rectangle.");
+          }
+        }
+      });
+    }
+
+    function generateKML() {
+      if (!rectangle) {
+        alert("No rectangle drawn to export.");
+        return;
+      }
+
+      const bounds = rectangle.getBounds();
+      const ne = bounds.getNorthEast();
+      const sw = bounds.getSouthWest();
+
+      let kml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+      kml += `<kml xmlns="http://www.opengis.net/kml/2.2">\n`;
+      kml += `<Document>\n`;
+      kml += `<Placemark>\n`;
+      kml += `<name>Rectangle</name>\n`;
+      kml += `<Polygon>\n`;
+      kml += `<outerBoundaryIs>\n`;
+      kml += `<LinearRing>\n`;
+      kml += `<coordinates>\n`;
+      kml += `${sw.lng()},${sw.lat()},0 \n`;
+      kml += `${ne.lng()},${sw.lat()},0 \n`;
+      kml += `${ne.lng()},${ne.lat()},0 \n`;
+      kml += `${sw.lng()},${ne.lat()},0 \n`;
+      kml += `${sw.lng()},${sw.lat()},0 \n`; // Close the rectangle
+      kml += `</coordinates>\n`;
+      kml += `</LinearRing>\n`;
+      kml += `</outerBoundaryIs>\n`;
+      kml += `</Polygon>\n`;
+      kml += `</Placemark>\n`;
+      kml += `</Document>\n`;
+      kml += `</kml>`;
+
+      downloadKML(kml);
+    }
+
+    function downloadKML(kml) {
+      const blob = new Blob([kml], { type: "application/vnd.google-earth.kml+xml" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "rectangle.kml";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function uploadKML() {
+
+    }
+
+    function clearRectangle() {
+      if (rectangle) {
+        rectangle.setMap(null);
+        rectangle = null;
+        drawingManager.setDrawingMode(google.maps.drawing.OverlayType.RECTANGLE);
+        drawingManager.setOptions({ drawingControl: true }); // Show drawing controls
+      } else {
+        alert("No rectangle to clear.");
+      }
+
+
+      if (polygon) {
+        polygon.setMap(null);
+        polygon = null;
+      }
+    }
+
+    function handleMouseMove(rectangle) {
+      const bounds = rectangle.getBounds();
+      const ne = bounds.getNorthEast(); // Northeast corner
+      const sw = bounds.getSouthWest(); // Southwest corner
+
+      console.log("Northeast corner:", ne.lat(), ne.lng());
+      console.log("Southwest corner:", sw.lat(), sw.lng());
+
+      update_metrics(sw.lat(), ne.lat(), sw.lng(), ne.lng())
+
+    }
+
+    function resetWithKML(rec, pol) {
+      if (rectangle) {
+        rectangle.setMap(null);
+      }
+      if (polygon) {
+        polygon.setMap(null);
+      }
+
+      const bounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(rec.sw.lat, rec.sw.lng),
+        new google.maps.LatLng(rec.ne.lat, rec.ne.lng)
+      );
+
+      rectangle = new google.maps.Rectangle({
+        bounds: bounds,
+        strokeColor: '#0000FF',
+        strokeOpacity: 1,
+        strokeWeight: 3,
+        fillColor: '#FFFF00',
+        fillOpacity: 0.35,
+        editable: true,
+        draggable: true,
+      });
+      google.maps.event.addListener(rectangle, "bounds_changed", () => {
+        handleMouseMove(rectangle);
+      });
+      handleMouseMove(rectangle);
+
+      polygon = new google.maps.Polygon({
+        paths: pol,
+        strokeColor: '#FF00FF',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF00FF',
+        fillOpacity: 0.35,
+        editable: false,
+      });
+
+      polygon.setMap(map);
+      rectangle.setMap(map);
+      drawingManager.setDrawingMode(null); // Disable drawing mode after resetting rectangle
+    }
+
+  </script>
+
+</head>
+
+<body onload="initMap()">
+
+  <div class="cont">
+    <div id="map"></div>
+    <div id="controls">
+      <div class="top_nav">
+        <div id="profile" onclick="logout()">Logout</div>
+      </div>
+      <br><br><br><br>
+      <button onclick="clearRectangle()">Clear Rectangle</button>
+      <button onclick="generateKML()">Download KML</button>
+      <button id="up_btn">Upload KML<input style="display: none;" type="file" id="fileInput" /></button>
+
+      <div class="line"></div>
+
+      <div class="metrics">
+        <div class="key">Area: <span id="area" class="value">- Sq Km</span></div>
+        <div class="key">Tiles: <span id="tiles" class="value">-</span></div>
+        <div class="key">Pixels: <span id="pixels" class="value">-</span></div>
+        <div class="key">RAM: <span id="ram" class="value">- GB</span></div>
+      </div>
+
+      <div class="line"></div>
+
+      <br><br><br>
+
+      <div class="server_portal">
+
+        <h3>Server portal</h3>
+        <div class="ram">RAM: <span id="ram_usd">-</span></div>
+        <div class="ram">Tasks: <span id="tasks_sz">-</span></div>
+        <div id="tasks_list"></div>
+
+        <br><br>
+
+        <button id="run_btn">Run This Task</button>
+
+        <br><br>
+
+      </div>
+
+    </div>
+  </div>
+</body>
+<script src="script.js"></script>
+
+</html>

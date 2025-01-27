@@ -1,0 +1,9 @@
+const firebaseConfig = {
+    apiKey: "AIzaSyAeC41pvleIQBEmHNHO-x1_MN6FXRgnNPQ",
+    authDomain: "mypropertyqr-gis-dash.firebaseapp.com",
+    projectId: "mypropertyqr-gis-dash",
+    storageBucket: "mypropertyqr-gis-dash.firebasestorage.app",
+    messagingSenderId: "998236341453",
+    appId: "1:998236341453:web:c91178d7cc5dd3be4cd584",
+    measurementId: "G-D431Y96BZJ"
+};
