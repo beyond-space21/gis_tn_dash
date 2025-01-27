@@ -18,3 +18,6 @@ sudo apt-get install python3-gdal
 
 
 numpy==1.26.4
+
+
+sudo apt install grass -y

@@ -2,7 +2,12 @@ import firebase_admin
 from firebase_admin import auth, credentials
 
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate("/home/anand/Documents/mypropertyqr-gis-dash-firebase-adminsdk-fbsvc-d7d63f33e4.json")
+
+try:
+    cred = credentials.Certificate("/home/anand/Documents/mypropertyqr-gis-dash-firebase-adminsdk-fbsvc-d7d63f33e4.json")
+except:
+    cred = credentials.Certificate("/root/firebase_service_key/mypropertyqr-gis-dash-firebase-adminsdk-fbsvc-d7d63f33e4.json")
+    
 firebase_admin.initialize_app(cred)
 
 def revoke_user_tokens(uid):
