@@ -134,13 +134,13 @@ document.getElementById('run_btn').onclick = async () => {
                 task_id: generateUUID()
             }
 
-            box_data = {
-                ne_lat: 11.07124,
-                ne_lon: 77.011059,
-                sw_lat: 11.070540,
-                sw_lon: 77.00447,
-                task_id: generateUUID()
-            }
+            // box_data = {
+            //     ne_lat: 11.07124,
+            //     ne_lon: 77.011059,
+            //     sw_lat: 11.070540,
+            //     sw_lon: 77.00447,
+            //     task_id: generateUUID()
+            // }
 
             await fetch(endpoint + "/process_data", {
                 method: "POST",

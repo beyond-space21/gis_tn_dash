@@ -1,5 +1,4 @@
-tile_URL = "test_cpp/tiles/{x}/{y}.png"
-
+tile_URL = "root/tiles/{x}/{y}.png"
 
 
 from PIL import Image
@@ -77,10 +76,10 @@ def render_map_tiles(base_url, ne_lat, ne_lon, sw_lat, sw_lon, zoom_level):
 def render(ne_latitude,ne_longitude,sw_latitude,sw_longitude,image_name):
     base_url = "https://s3.ap-south-2.amazonaws.com/prod-assets.mypropertyqr.in/survey_border/{x}/{y}.png"
     # Define the bounding box and zoom level
-    ne_latitude = 11.07124
-    ne_longitude = 77.011059
-    sw_latitude = 11.070540
-    sw_longitude = 77.004476
+    # ne_latitude = 11.07124
+    # ne_longitude = 77.011059
+    # sw_latitude = 11.070540
+    # sw_longitude = 77.004476
     zoom = 18
     # Generate the combined image
     rendered_image = render_map_tiles(base_url, ne_latitude, ne_longitude, sw_latitude, sw_longitude, zoom)
