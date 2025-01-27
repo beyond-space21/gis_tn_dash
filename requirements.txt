@@ -4,3 +4,4 @@ mercantile
 firebase-admin
 grass-session
 flask_CORS
+numpy==1.26.4
