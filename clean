@@ -4,4 +4,4 @@ rm -rf raster
 rm -rf grassdb
 rm all_tasks.json
 
-echo {} > all_jasks.json
+echo {} > all_tasks.json
