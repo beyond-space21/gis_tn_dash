@@ -69,9 +69,22 @@
 
       // Initialize the map
       map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 12.9716, lng: 77.5946 }, // Default center (Bangalore, India)
-        zoom: 8,
+        center: { lat: 9.998174, lng: 78.108815 }, // Default center (Bangalore, India)
+        zoom: 18
       });
+
+      const customTileLayer = new google.maps.ImageMapType({
+        getTileUrl: function (coord, zoom) {
+          if (zoom !== 18) return null; // Only load tiles at zoom level 18
+          return `https://s3.ap-south-2.amazonaws.com/prod-assets.mypropertyqr.in/survey_border/${coord.x}/${coord.y}.png`;
+        },
+        tileSize: new google.maps.Size(256, 256),
+        maxZoom: 18,
+        minZoom: 18,
+        name: "Custom Tiles",
+      });
+
+      map.overlayMapTypes.insertAt(0, customTileLayer);
 
       // Initialize the drawing manager
       drawingManager = new google.maps.drawing.DrawingManager({

@@ -109,7 +109,7 @@ function getFormattedDate() {
 
 setInterval(async () => {
     await update_met()
-}, 2000);
+}, 10000);
 
 function generateUUID() {
     // Generate a UUID (Version 4)
