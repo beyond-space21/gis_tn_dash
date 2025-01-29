@@ -56,9 +56,10 @@ def thread_samp(obj, id):
 def init_new_task(obj):
     global all_tasks, tasks  # Ensure tasks is global
     try:
-        task_id = str((len(all_tasks)+1)) + obj['task_id']
+        task_id = obj['task_id']
         tasks[task_id] = multiprocessing.Process(target=thread_samp, args=(obj, task_id))
         all_tasks[task_id] = {"status": "RUNNING"}
+        all_tasks[task_id] = {"timestamp": obj['timestamp']}
         
         write_tasks_to_file()
 

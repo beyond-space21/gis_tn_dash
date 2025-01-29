@@ -104,7 +104,7 @@ function getFormattedDate() {
     let month = months[date.getMonth()]; // Three-letter month abbreviation
     let day = String(date.getDate()).padStart(2, '0'); // Two-digit day
 
-    return `(${year}${month}${day})`;
+    return `${year}${month}${day}`;
 }
 
 setInterval(async () => {
@@ -160,7 +160,8 @@ document.getElementById('run_btn').onclick = async () => {
                 sw_lat: sw.lat(),
                 sw_lon: sw.lng(),
                 task_id: process_name+"_"+getFormattedDate()+"_"+generateUUID(),
-                map_layer: radio_survey?"survey":"subdivision"
+                map_layer: radio_survey?"survey":"subdivision",
+                timestamp: str(Date.now())
             }
 
             // box_data = {
