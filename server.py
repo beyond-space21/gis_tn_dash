@@ -29,13 +29,13 @@ def write_tasks_to_file():
 def thread_samp(obj, id):
     global all_tasks
     try:
-        north, east = obj['ne_lat'], obj['ne_lon']
+        north, east = obj['ne_lat'], obj['minuitesne_lon']
         south, west = obj['sw_lat'], obj['sw_lon']
 
         # north, east = 11.07124, 77.011059 
         # south, west = 11.070540, 77.004476
 
-        main.tile_renderer.render(north,east,south,west,id)
+        main.tile_renderer.render(north,east,south,west,id,obj['map_layer'])
         main.init.create_env(id)
         main.run_process(north,east,south,west,id,id,"raster_"+id,id,id)
         

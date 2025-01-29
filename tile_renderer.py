@@ -1,4 +1,4 @@
-tile_URL = "/root/tiles/{x}/{y}.png"
+tile_URL = "/root/tiles/{tile_src}/{x}/{y}.png"
 
 
 from PIL import Image
@@ -13,7 +13,7 @@ import sys
 sys.path.append('/usr/lib/python3/dist-packages')
 from osgeo import gdal, osr
 
-def render_map_tiles(base_url, ne_lat, ne_lon, sw_lat, sw_lon, zoom_level):
+def render_map_tiles(base_url, ne_lat, ne_lon, sw_lat, sw_lon, zoom_level,tile_src):
     """
     Combines raster map tiles into a single rendered image based on the bounding box and zoom level.
 
@@ -54,7 +54,7 @@ def render_map_tiles(base_url, ne_lat, ne_lon, sw_lat, sw_lon, zoom_level):
                     # Read the image as a NumPy array
                     # tile_image = np.asarray(bytearray(response.content), dtype=np.uint8)
                     # tile_image = cv2.imdecode(tile_image_, cv2.IMREAD_UNCHANGED)
-                    tile_image = cv2.imread(tile_URL.format(x=x,y=y),cv2.IMREAD_GRAYSCALE)
+                    tile_image = cv2.imread(tile_URL.format(tile_src=tile_src,x=x,y=y),cv2.IMREAD_GRAYSCALE)
 
                     # Convert the image to binary (1 byte per pixel)
                     _, tile_image = cv2.threshold(tile_image, 215, 255, cv2.THRESH_BINARY_INV)
@@ -73,7 +73,7 @@ def render_map_tiles(base_url, ne_lat, ne_lon, sw_lat, sw_lon, zoom_level):
 
 
 
-def render(ne_latitude,ne_longitude,sw_latitude,sw_longitude,image_name):
+def render(ne_latitude,ne_longitude,sw_latitude,sw_longitude,image_name,tile_src):
     base_url = "https://s3.ap-south-2.amazonaws.com/prod-assets.mypropertyqr.in/survey_border/{x}/{y}.png"
     # Define the bounding box and zoom level
     # ne_latitude = 11.07124
@@ -82,7 +82,7 @@ def render(ne_latitude,ne_longitude,sw_latitude,sw_longitude,image_name):
     # sw_longitude = 77.004476
     zoom = 18
     # Generate the combined image
-    rendered_image = render_map_tiles(base_url, ne_latitude, ne_longitude, sw_latitude, sw_longitude, zoom)
+    rendered_image = render_map_tiles(base_url, ne_latitude, ne_longitude, sw_latitude, sw_longitude, zoom, tile_src)
 
     rendered_image = crop_image.crop(rendered_image, ne_latitude, ne_longitude, sw_latitude, sw_longitude)
 
@@ -97,7 +97,7 @@ def render(ne_latitude,ne_longitude,sw_latitude,sw_longitude,image_name):
     if not os.path.exists(sv_dir):
        os.makedirs(sv_dir)
 
-    # Create GDAL raster
+    # Create GDAL rastertile_src
     driver = gdal.GetDriverByName("BMP")
     dataset = driver.Create(sv_dir+'/'+image_name+".bmp", width, height, 1, gdal.GDT_Byte)
     dataset.GetRasterBand(1).WriteArray(rendered_image)

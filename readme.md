@@ -21,3 +21,7 @@ numpy==1.26.4
 
 
 sudo apt install grass -y
+
+
+from : 14:57:57
+to   : 15:20:06

@@ -117,6 +117,17 @@ MAX_RAM = 50
 
 document.getElementById('run_btn').onclick = async () => {
 
+    radio_survey = document.getElementById('survey').checked
+    radio_subdivision = document.getElementById('subdivision').checked
+
+
+    if(!(radio_survey || radio_subdivision)){
+        console.log(radio_survey,radio_subdivision);
+        
+        alert("Select map layer")
+        return;
+    }
+
 
     if(RAM_VALIDATOR < MAX_RAM)
     if (btn_flg) {
@@ -131,7 +142,8 @@ document.getElementById('run_btn').onclick = async () => {
                 ne_lon: ne.lng(),
                 sw_lat: sw.lat(),
                 sw_lon: sw.lng(),
-                task_id: generateUUID()
+                task_id: generateUUID(),
+                map_layer: radio_survey?"survey":"subdivision"
             }
 
             // box_data = {
@@ -161,6 +173,7 @@ document.getElementById('run_btn').onclick = async () => {
 
         } else {
             alert("No rectangle to run.");
+            btn_flg = true
         }
     } else {
         alert("Wait some SECONDS to process previous request")
