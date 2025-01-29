@@ -161,7 +161,7 @@ document.getElementById('run_btn').onclick = async () => {
                 sw_lon: sw.lng(),
                 task_id: process_name+"_"+getFormattedDate()+"_"+generateUUID(),
                 map_layer: radio_survey?"survey":"subdivision",
-                timestamp: str(Date.now())
+                timestamp: toString(Date.now())
             }
 
             // box_data = {
