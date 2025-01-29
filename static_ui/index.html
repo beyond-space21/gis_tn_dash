@@ -250,7 +250,7 @@
       <div class="top_nav">
         <div id="profile" onclick="logout()">Logout</div>
       </div>
-      <br><br><br><br>
+      <br><br>
       <button onclick="clearRectangle()">Clear Rectangle</button>
       <button onclick="generateKML()">Download KML</button>
       <button id="up_btn">Upload KML<input style="display: none;" type="file" id="fileInput" /></button>
@@ -266,13 +266,18 @@
 
       <div class="line"></div>
 
-      <br><br><br>
+      <br><br>
 
       <div class="mp_slt_hd">Select layer</div>
         <input type="radio" id="survey" name="map_set_type" value="survey">
         <label for="survey" class="select_mp">Survey</label><br>
         <input type="radio" id="subdivision" name="map_set_type" value="subdivision">
         <label for="subdivision" class="select_mp">Subdivision</label><br>
+
+      <br>
+
+      <div class="mp_slt_hd">Process name</div>
+        <input type="text" id="process_name">
 
       <br><br><br>
 

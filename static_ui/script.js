@@ -96,6 +96,17 @@ async function update_met(){
     });
 }
 
+function getFormattedDate() {
+    const months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+    const date = new Date();
+    
+    let year = date.getFullYear().toString().slice(-2); // Last two digits of year
+    let month = months[date.getMonth()]; // Three-letter month abbreviation
+    let day = String(date.getDate()).padStart(2, '0'); // Two-digit day
+
+    return `(${year}${month}${day})`;
+}
+
 setInterval(async () => {
     await update_met()
 }, 2000);
@@ -119,12 +130,18 @@ document.getElementById('run_btn').onclick = async () => {
 
     radio_survey = document.getElementById('survey').checked
     radio_subdivision = document.getElementById('subdivision').checked
+    process_name = document.getElementById("process_name").value
 
 
     if(!(radio_survey || radio_subdivision)){
         console.log(radio_survey,radio_subdivision);
         
         alert("Select map layer")
+        return;
+    }
+
+    if(process_name == null){
+        alert("Give the process a name")
         return;
     }
 
@@ -142,7 +159,7 @@ document.getElementById('run_btn').onclick = async () => {
                 ne_lon: ne.lng(),
                 sw_lat: sw.lat(),
                 sw_lon: sw.lng(),
-                task_id: generateUUID(),
+                task_id: process_name+"_"+getFormattedDate+"_"+generateUUID(),
                 map_layer: radio_survey?"survey":"subdivision"
             }
 
@@ -169,14 +186,14 @@ document.getElementById('run_btn').onclick = async () => {
 
             setTimeout(() => {
                 btn_flg = true
-            }, 2000);
+            }, 5000);
 
         } else {
             alert("No rectangle to run.");
             btn_flg = true
         }
     } else {
-        alert("Wait some SECONDS to process previous request")
+        alert("Wait some SECONDS to initialize previous request")
     }
     else{
         alert("select area with RAM < "+MAX_RAM+"GB")

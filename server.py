@@ -108,7 +108,7 @@ def list_files(path):
         if not os.path.isdir(folder_path):
             return jsonify({"error": "The specified folder does not exist."}), 400
 
-        try:\
+        try:
             # List the files in the folder
             files = os.listdir(folder_path)
             # Filter only files (ignore directories)
