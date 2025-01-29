@@ -1,0 +1,1 @@
+pm2 start server.py --interpreter ./venv/bin/python --name GIS_ROCKER

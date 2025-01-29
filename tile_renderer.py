@@ -1,4 +1,4 @@
-tile_URL = "/root/tiles/{tile_src}/{x}/{y}.png"
+tile_URL = "/root/TILES_SRC/{tile_src}/{x}/{y}.png"
 
 
 from PIL import Image
@@ -54,6 +54,9 @@ def render_map_tiles(base_url, ne_lat, ne_lon, sw_lat, sw_lon, zoom_level,tile_s
                     # Read the image as a NumPy array
                     # tile_image = np.asarray(bytearray(response.content), dtype=np.uint8)
                     # tile_image = cv2.imdecode(tile_image_, cv2.IMREAD_UNCHANGED)
+
+                    # print(tile_URL.format(tile_src=tile_src,x=x,y=y))
+                    # input()
                     tile_image = cv2.imread(tile_URL.format(tile_src=tile_src,x=x,y=y),cv2.IMREAD_GRAYSCALE)
 
                     # Convert the image to binary (1 byte per pixel)

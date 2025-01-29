@@ -124,9 +124,9 @@ def run_process(north,east,south,west,location,source_raster,output_raster,outpu
 # south, west = 11.070540, 77.004476
 
 
-# task_id = "ghy"
+# task_id = "ghy_test"
 
 
-# tile_renderer.render(north,east,south,west,task_id)
+# tile_renderer.render(north,east,south,west,task_id,"survey")
 # init.create_env(task_id)
 # run_process(north,east,south,west,task_id,task_id,"raster_"+task_id,task_id,task_id)

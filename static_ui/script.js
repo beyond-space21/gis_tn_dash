@@ -6,7 +6,7 @@ up_btn.onclick = () => {
 }
 
 
-endpoint = "http://84.247.139.36:5000/"
+endpoint = "http://84.247.139.36/"
 
 ip_tg.addEventListener('change', function (event) {
     const file = event.target.files[0];
