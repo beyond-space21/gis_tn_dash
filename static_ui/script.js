@@ -159,7 +159,7 @@ document.getElementById('run_btn').onclick = async () => {
                 ne_lon: ne.lng(),
                 sw_lat: sw.lat(),
                 sw_lon: sw.lng(),
-                task_id: process_name+"_"+getFormattedDate+"_"+generateUUID(),
+                task_id: process_name+"_"+getFormattedDate()+"_"+generateUUID(),
                 map_layer: radio_survey?"survey":"subdivision"
             }
 
