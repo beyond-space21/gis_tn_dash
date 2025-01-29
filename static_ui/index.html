@@ -75,9 +75,10 @@
 
       const customTileLayer = new google.maps.ImageMapType({
         getTileUrl: function (coord, zoom) {
-          if (zoom !== 18) return null; // Only load tiles at zoom level 18
-          return `https://s3.ap-south-2.amazonaws.com/prod-assets.mypropertyqr.in/survey_border/${coord.x}/${coord.y}.png`;
+          if (zoom !== 18) return null;
+          return `https://s3.ap-south-2.amazonaws.com/prod-assets.mypropertyqr.in/village_border/${coord.x}/${coord.y}.png`;
         },
+
         tileSize: new google.maps.Size(256, 256),
         maxZoom: 18,
         minZoom: 18,

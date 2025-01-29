@@ -109,7 +109,7 @@ function getFormattedDate() {
 
 setInterval(async () => {
     await update_met()
-}, 10000);
+}, 2000);
 
 function generateUUID() {
     // Generate a UUID (Version 4)
@@ -160,7 +160,7 @@ document.getElementById('run_btn').onclick = async () => {
                 sw_lat: sw.lat(),
                 sw_lon: sw.lng(),
                 task_id: process_name+"_"+getFormattedDate()+"_"+generateUUID(),
-                map_layer: radio_survey?"survey":"subdivision",
+                map_layer: radio_survey?"survey":"subdiv",
                 timestamp: toString(Date.now())
             }
 
@@ -187,7 +187,7 @@ document.getElementById('run_btn').onclick = async () => {
 
             setTimeout(() => {
                 btn_flg = true
-            }, 5000);
+            }, 2000);
 
         } else {
             alert("No rectangle to run.");
