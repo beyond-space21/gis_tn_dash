@@ -139,8 +139,8 @@ document.getElementById('run_btn').onclick = async () => {
         alert("Select map layer")
         return;
     }
-
-    if(process_name == null){
+    
+    if(process_name == ""){
         alert("Give the process a name")
         return;
     }
