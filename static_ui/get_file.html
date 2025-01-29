@@ -58,91 +58,106 @@
         background-color: rgb(48, 46, 46);
     }
 
-    .block{
+    .block {
         padding: 20px;
         margin: 10px;
-        font-family:Arial, Helvetica, sans-serif;
+        font-family: Arial, Helvetica, sans-serif;
         background-color: black;
     }
 
-    .block_head{
+    .block_head {
         color: aliceblue;
         font-size: larger;
         font-weight: 500;
     }
 
-    #loading{
+    #loading {
         color: aliceblue;
         font-weight: 700;
         font-family: Arial, Helvetica, sans-serif;
         font-size: medium;
     }
+
+    #hd {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: x-large;
+        font-weight: 800;
+        color: rgb(226, 222, 222);
+        margin: 15px;
+    }
+
 </style>
 
 <body>
 
+    <div id="hd"></div>
+    <br>
+    <br>
     <div id="cont"></div>
     <div id="loading">LOADING...</div>
 
     <script>
+
         ldng = document.getElementById("loading")
         cont = document.getElementById("cont")
-        
+
         endpoint = "http://84.247.139.36/"
         checkAuth(init_cnt)
-        
-        async function init_cnt(){
-        id = location.href.split('?')[1]
-        const response = await fetch(endpoint + "api/logs/" + id, {
-            headers: {
-                "Content-Type": "application/json",
-                "Auth-Token": await getToken()
-            },
-        });
 
-        data = (await response.text()).split('\n')
-        data.forEach(lg => {
-            elm = document.createElement('div')
-            elm.className = "block"
-            if(lg.length > 1){
-            obj = JSON.parse(lg)
-            elm.innerHTML = `
+        async function init_cnt() {
+            id = location.href.split('?')[1]
+            document.title = id
+            document.getElementById("hd").innerText = id
+            const response = await fetch(endpoint + "api/logs/" + id, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Auth-Token": await getToken()
+                },
+            });
+
+            data = (await response.text()).split('\n')
+            data.forEach(lg => {
+                elm = document.createElement('div')
+                elm.className = "block"
+                if (lg.length > 1) {
+                    obj = JSON.parse(lg)
+                    elm.innerHTML = `
             <div class="block_head">${obj.log}</div>
             `
-            cont.appendChild(elm)
-            }
-        });
+                    cont.appendChild(elm)
+                }
+            });
 
 
-        const response_ = await fetch(endpoint + "api/shp/" + id, {
-            headers: {
-                "Content-Type": "application/json",
-                "Auth-Token": await getToken()
-            },
-        });
-        data = (await response_.json()).files
-        console.log(data);
-        
-        all_links = []
-        elm = document.createElement('div')
-        elm.className = "block"
-        elm.innerHTML = `
+            const response_ = await fetch(endpoint + "api/shp/" + id, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Auth-Token": await getToken()
+                },
+            });
+            data = (await response_.json()).files
+            console.log(data);
+
+            all_links = []
+            elm = document.createElement('div')
+            elm.className = "block"
+            elm.innerHTML = `
         <div class="block_head">Generated files</div>
         <br>
         `
-        data.forEach((e) => {
-            elm.innerHTML += `
+            data.forEach((e) => {
+                elm.innerHTML += `
             <div>
                 <br>
-            <a class="block_link" href="${endpoint+'api/shp/get_file/'+e}">${e}</a>
+            <a class="block_link" href="${endpoint + 'api/shp/get_file/' + e}">${e}</a>
             </div>
             `
-        })
+            })
 
-        cont.appendChild(elm)
-        ldng.style.display = 'none'
+            cont.appendChild(elm)
+            ldng.style.display = 'none'
 
-    }
+        }
 
 
         async function fetchAndZipFiles(urls, zipFileName) {
